@@ -1,5 +1,6 @@
-package com.orice.io.btd;
+package com.orice.io.btd.strategy;
 
+import com.orice.io.btd.Business;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
