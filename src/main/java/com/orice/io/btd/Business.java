@@ -1,11 +1,10 @@
 package com.orice.io.btd;
 
+import com.orice.io.btd.bean.PoolType;
+import com.orice.io.btd.bean.RunningPool;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

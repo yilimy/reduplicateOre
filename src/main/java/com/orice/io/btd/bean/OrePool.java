@@ -1,6 +1,5 @@
-package com.orice.io.btd;
+package com.orice.io.btd.bean;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +44,7 @@ public class OrePool {
     }
 
     public OrePool(PoolType type, Date date){
-        this(type.cost, type.output, date, type.period);
+        this(type.getCost(), type.getOutput(), date, type.getPeriod());
     }
 
     public void setStart(Date start){

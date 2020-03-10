@@ -1,5 +1,7 @@
-package com.orice.io.btd;
+package com.orice.io.btd.bean;
 
+import com.orice.io.btd.bean.OrePool;
+import com.orice.io.btd.bean.PoolType;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,9 +1,12 @@
-package com.orice.io.btd;
+package com.orice.io.btd.bean;
+
+import lombok.Getter;
 
 /**
  * @author caimeng
  * @date 2020/2/23 14:43
  */
+@Getter
 public enum PoolType {
     // 初级矿池
     JUNIOR_V1(100, 110, 30),

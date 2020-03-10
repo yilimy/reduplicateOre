@@ -1,5 +1,6 @@
 package com.orice.io.btd;
 
+import com.orice.io.btd.bean.PoolType;
 import com.orice.io.btd.strategy.InvestStrategy;
 import com.orice.io.btd.strategy.PoolStrategy;
 import com.orice.io.btd.strategy.SaleStrategy;
@@ -38,7 +39,7 @@ public class Project {
     private void init(){
         // 初始BTD总数
         double intBtd = 408.666355;
-        business = new Business(PoolType.SUPER_V1.cost + intBtd);
+        business = new Business(PoolType.SUPER_V1.getCost() + intBtd);
         // 设置购买矿池的时间、种类
         strategies.add(createStrategy("2020-02-09", PoolType.SUPER_V1));
         strategies.add(createStrategy("2020-02-10", PoolType.UPGRADE_V1));
