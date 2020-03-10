@@ -2,13 +2,12 @@ package com.orice.io.btd;
 
 import com.orice.io.btd.bean.PoolType;
 import com.orice.io.btd.bean.RunningPool;
-import lombok.Data;
+import com.orice.io.btd.strategy.InvestStrategy;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 复投项目
@@ -16,22 +15,63 @@ import java.util.List;
  * @author caimeng
  * @date 2020/2/23 15:10
  */
-@Data
 @Slf4j
 public class Business {
     /** 持有的btd数量 **/
-    private static double btd;
+    private double btd;
     /** 当天收益 **/
     private static double p;
     /** 已运行的btd数量 **/
     private List<RunningPool> pools = new ArrayList<>();
+    /** 收益记录 **/
+    private Map<LocalDate, Double> profitMap = new HashMap<>();
+    /** 策略详情 **/
+    @Setter
+    private List<InvestStrategy> strategies = new ArrayList<>();
 
     public Business(double b){
-        btd = b;
+        this.btd = b;
     }
 
-    private void deal(){
-        // 1. 结算昨天收益
+    public Business(double b, List<InvestStrategy> strategies){
+        btd = b;
+        this.strategies = strategies;
+    }
+
+    /**
+     * 开始复投 [start, end)
+     * @param start
+     * @param end
+     */
+    public void start(LocalDate start, LocalDate end){
+        for (LocalDate date = start; date.isBefore(end); date = date.plusDays(1)){
+            System.out.println("");
+            log.info("date : {}", date);
+            processDate(date);
+        }
+    }
+
+    /**
+     * 检查每天的复投
+     * @param date
+     */
+    private void processDate(LocalDate date) {
+
+        // 核算前一天收益
+        profit(date);
+
+        // 检查到指定日期有策略，执行策略
+        strategies.stream().forEach(item -> {
+            if (date.isEqual(item.getDate())){
+                log.info("check strategy {}", item);
+                item.deal(this);
+            }
+        });
+
+        // 触发自动购买策略，10w, 4w
+
+        // 当日结算
+        System.out.printf("%s total btd %s\n", date, holds());
     }
 
     /**
@@ -63,18 +103,22 @@ public class Business {
      * @param date
      * @return
      */
-    public void profit(LocalDate date){
+    private void profit(LocalDate date){
+        if (profitMap.containsKey(date)){
+            return;
+        }
         p = 0;
         pools.stream().forEach(item -> p += item.profit(date));
         log.info("profit : {}", p);
         btd += p;
+        profitMap.put(date, p);
     }
 
     /**
      * 持有的BTD数量
      * @return
      */
-    public double holds(){
+    private double holds(){
         return btd;
     }
 }
