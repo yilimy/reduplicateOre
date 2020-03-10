@@ -5,6 +5,7 @@ import com.orice.io.btd.bean.PoolType;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -31,7 +32,7 @@ public class RunningPool {
      * @param btd 持有BTD数量
      * @return
      */
-    public double buyPool(PoolType type, Date date, double btd){
+    public double buyPool(PoolType type, LocalDate date, double btd){
         OrePool pool = new OrePool(type, null);
         // 检查BTD是否够付款
         if (pool.getCost() > btd){
@@ -41,10 +42,7 @@ public class RunningPool {
         // 购买一个矿池
         if (running == null){
             // 购买矿池，次日生效
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.add(Calendar.DATE, 1);
-            pool.setStart(calendar.getTime());
+            pool.setStart(date.plusDays(1));
             running = pool;
             log.info("buy pool success {}", pool);
             return btd - pool.getCost();
@@ -63,7 +61,7 @@ public class RunningPool {
      * 结算矿池收益，当天
      * @return
      */
-    public double profit(Date date){
+    public double profit(LocalDate date){
         // 没有正在运行的矿池
         if (running == null){
             return 0;
@@ -74,10 +72,7 @@ public class RunningPool {
         }
         // 没有矿池正在运行，运行续期矿池
         if (next != null){
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.add(Calendar.DATE, -1);
-            next.setStart(calendar.getTime());
+            next.setStart(date);
             running = next;
             next = null;
             return running.profit(date);

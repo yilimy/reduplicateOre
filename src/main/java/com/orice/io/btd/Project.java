@@ -94,17 +94,16 @@ public class Project {
 
     /**
      * 检查每天的复投
-     * @param localDate
+     * @param date
      */
-    private void processDate(LocalDate localDate) {
-        Date date = DateUtil.localDate2Date(localDate);
+    private void processDate(LocalDate date) {
 
         // 核算前一天收益
         business.profit(date);
 
         // 检查到指定日期有策略，执行策略
         strategies.stream().forEach(item -> {
-            if (localDate.isEqual(item.getDate())){
+            if (date.isEqual(item.getDate())){
                 log.info("check strategy {}", item);
                 item.deal(business);
             }
@@ -113,7 +112,7 @@ public class Project {
         // 触发自动购买策略，10w, 4w
 
         // 当日结算
-        System.out.printf("%s total btd %s\n", localDate, business.holds());
+        System.out.printf("%s total btd %s\n", date, business.holds());
     }
 
 }

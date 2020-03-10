@@ -5,6 +5,7 @@ import com.orice.io.btd.bean.RunningPool;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +50,7 @@ public class Business {
      * @param type
      * @param date
      */
-    public void addPool(PoolType type, Date date){
+    public void addPool(PoolType type, LocalDate date){
         RunningPool runningPool = new RunningPool();
         btd = runningPool.buyPool(type, date, btd);
         log.info("add {}", runningPool);
@@ -62,7 +63,7 @@ public class Business {
      * @param date
      * @return
      */
-    public void profit(Date date){
+    public void profit(LocalDate date){
         p = 0;
         pools.stream().forEach(item -> p += item.profit(date));
         log.info("profit : {}", p);

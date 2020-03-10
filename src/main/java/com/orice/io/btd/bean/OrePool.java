@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,9 +24,9 @@ public class OrePool {
     /** 周期 **/
     private int period;
     /** 起投日期 **/
-    private Date start;
+    private LocalDate start;
     /** 终止日期 **/
-    private Date end;
+    private LocalDate end;
     /** 已运行天数 **/
     private int runningDays;
     /** 已产出 **/
@@ -35,7 +36,7 @@ public class OrePool {
     /** 一天预计产出 **/
     private final double perOut;
 
-    public OrePool(double cost, double expectOutput, Date start, int period){
+    public OrePool(double cost, double expectOutput, LocalDate start, int period){
         this.cost = cost;
         this.expectOutput = expectOutput;
         this.period = period;
@@ -43,14 +44,14 @@ public class OrePool {
         setStart(start);
     }
 
-    public OrePool(PoolType type, Date date){
+    public OrePool(PoolType type, LocalDate date){
         this(type.getCost(), type.getOutput(), date, type.getPeriod());
     }
 
-    public void setStart(Date start){
+    public void setStart(LocalDate start){
         if (start != null){
             this.start = start;
-            this.end = plusDays(start, period);
+            this.end = start.plusDays(period);
         }
     }
 
@@ -71,47 +72,22 @@ public class OrePool {
     }
 
     /**
-     * 获取运行天数
-     * @return
-     */
-    public int getRunningDays(){
-        Date current = new Date();
-        if (current.before(start)){
-            return 0;
-        }
-        if (current.after(end)){
-            return 0;
-        }
-        long betweenDays = (System.currentTimeMillis() - start.getTime()) / dayMillis;
-        // 运行当天已可获取收益，天数+1
-        return (int) betweenDays + 1;
-    }
-
-    /**
      * 矿池是否在有效期
      * @return
      */
-    public boolean isAvailable(Date date){
+    public boolean isAvailable(LocalDate date){
         // [start, end]
-        return !date.before(start) && !date.after(end);
+        return !date.isBefore(start) && !date.isAfter(end);
     }
 
     /**
      * 核算当天收益
      * @return
      */
-    public double profit(Date date){
+    public double profit(LocalDate date){
         if (isAvailable(date)){
             return perOut;
         }
         return 0;
-    }
-
-    /**
-     * 获取当前产出
-     * @return
-     */
-    public double getRealOutput(){
-        return getRunningDays() * 1.0 * perOut;
     }
 }

@@ -20,6 +20,6 @@ public class PoolStrategy extends InvestStrategy{
 
     @Override
     public void deal(Business business) {
-        business.addPool(type, DateUtil.localDate2Date(date));
+        business.addPool(type, date);
     }
 }
