@@ -23,19 +23,12 @@ public class Business {
     private static double p;
     /** 已运行的btd数量 **/
     private List<RunningPool> pools = new ArrayList<>();
-    /** 收益记录 **/
-    private Map<LocalDate, Double> profitMap = new HashMap<>();
     /** 策略详情 **/
     @Setter
     private List<InvestStrategy> strategies = new ArrayList<>();
 
     public Business(double b){
         this.btd = b;
-    }
-
-    public Business(double b, List<InvestStrategy> strategies){
-        btd = b;
-        this.strategies = strategies;
     }
 
     /**
@@ -56,10 +49,8 @@ public class Business {
      * @param date
      */
     private void processDate(LocalDate date) {
-
         // 核算前一天收益
         profit(date);
-
         // 检查到指定日期有策略，执行策略
         strategies.stream().forEach(item -> {
             if (date.isEqual(item.getDate())){
@@ -67,11 +58,10 @@ public class Business {
                 item.deal(this);
             }
         });
-
         // 触发自动购买策略，10w, 4w
-
-        // 当日结算
-        System.out.printf("%s total btd %s\n", date, holds());
+        pools.stream().forEach(item -> autoRenewal(item, date));
+        // 当日结算持有
+        System.out.printf("%s total btd %s\n", date, btd);
     }
 
     /**
@@ -99,19 +89,37 @@ public class Business {
     }
 
     /**
+     * 自动续期
+     */
+    private void autoRenewal(RunningPool pool, LocalDate date){
+        if (!pool.isEndDay(date)){
+            return;
+        }
+        if (!pool.isAuto() || pool.getNext() != null){
+            return;
+        }
+        //自动换成最新版的矿池
+        PoolType type = pool.getRunning().getType();
+        if (type == null){
+            throw new RuntimeException("pool no type .");
+        }
+        String typeStr = type.name();
+        typeStr = typeStr.substring(0, typeStr.length()-1) + "2";
+        PoolType typeNew = PoolType.matches(typeStr);
+        btd = pool.buyPool(typeNew, date, btd);
+        log.info("auto renewal pool .");
+    }
+
+    /**
      * 结算累计收益
      * @param date
      * @return
      */
     private void profit(LocalDate date){
-        if (profitMap.containsKey(date)){
-            return;
-        }
         p = 0;
         pools.stream().forEach(item -> p += item.profit(date));
         log.info("profit : {}", p);
         btd += p;
-        profitMap.put(date, p);
     }
 
     /**

@@ -28,11 +28,11 @@ public enum PoolType {
     // 进阶矿池
     UPGRADE_V2(4000, 5000, 45),
     // 高级矿池
-    HIGH_V2(1000, 12800, 45),
+    HIGH_V2(10000, 12800, 45),
     // 精英矿池
-    ELITE_V2(4000, 5200, 45),
+    ELITE_V2(40000, 52000, 45),
     // 超级矿池
-    SUPER_V2(100000, 13500, 45)
+    SUPER_V2(100000, 135000, 45)
     ;
     double cost;
     double output;
@@ -42,5 +42,14 @@ public enum PoolType {
         this.cost = cost;
         this.output = output;
         this.period = period;
+    }
+
+    public static PoolType matches(String name){
+        for (PoolType type : values()){
+            if (type.name().equalsIgnoreCase(name)){
+                return type;
+            }
+        }
+        return null;
     }
 }

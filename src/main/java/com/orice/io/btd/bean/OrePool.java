@@ -35,6 +35,8 @@ public class OrePool {
     private final static long dayMillis = 1000L*3600L*24L;
     /** 一天预计产出 **/
     private final double perOut;
+    /** 矿池类型 **/
+    private PoolType type;
 
     public OrePool(double cost, double expectOutput, LocalDate start, int period){
         this.cost = cost;
@@ -46,37 +48,31 @@ public class OrePool {
 
     public OrePool(PoolType type, LocalDate date){
         this(type.getCost(), type.getOutput(), date, type.getPeriod());
+        this.type = type;
     }
 
     public void setStart(LocalDate start){
         if (start != null){
             this.start = start;
-            this.end = start.plusDays(period);
+            // 终止日期的23:59:59秒，以前一天算
+            this.end = start.plusDays(period - 1);
         }
     }
 
     /**
-     * 计算指定天数后的日期
+     * 是否最后一天
      * @param date
-     * @param days
      * @return
      */
-    private Date plusDays(Date date, int days){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        // 向前天数 days
-        calendar.add(Calendar.DATE, days);
-        // 向后一秒
-        calendar.add(Calendar.SECOND, -1);
-        return calendar.getTime();
+    public boolean isEndDay(LocalDate date){
+        return end.isEqual(date);
     }
 
     /**
-     * 矿池是否在有效期
+     * 矿池是否在有效期  [start, end]
      * @return
      */
     public boolean isAvailable(LocalDate date){
-        // [start, end]
         return !date.isBefore(start) && !date.isAfter(end);
     }
 

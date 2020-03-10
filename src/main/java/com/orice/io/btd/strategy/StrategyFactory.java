@@ -10,15 +10,27 @@ import java.time.LocalDate;
  */
 public class StrategyFactory {
 
-    public static InvestStrategy createStrategy(String dateStr, PoolType type){
-        return createStrategy(dateStr, type, 0);
+    /**
+     *
+     * @param buyDate 购买日期
+     * @param type
+     * @return
+     */
+    public static InvestStrategy createStrategy(String buyDate, PoolType type){
+        return createStrategy(buyDate, type, 0);
     }
 
-    public static InvestStrategy createStrategy(String dateStr, double btd){
-        return createStrategy(dateStr, null, btd);
+    /**
+     *
+     * @param enCashDate 取现日期
+     * @param btd
+     * @return
+     */
+    public static InvestStrategy createStrategy(String enCashDate, double btd){
+        return createStrategy(enCashDate, null, btd);
     }
 
-    public static InvestStrategy createStrategy(String dateStr, PoolType type, double btd){
+    private static InvestStrategy createStrategy(String dateStr, PoolType type, double btd){
         if (type != null){
             return PoolStrategy.builder().type(type).date(LocalDate.parse(dateStr)).build();
         }

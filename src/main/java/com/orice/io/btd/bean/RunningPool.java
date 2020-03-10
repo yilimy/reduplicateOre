@@ -25,6 +25,9 @@ public class RunningPool {
     /** 下次投入的矿池 **/
     private OrePool next;
 
+    /** 自动续期配置 **/
+    private boolean auto = true;
+
     /**
      * 购买一个矿池
      * @param type 矿池类型
@@ -78,6 +81,18 @@ public class RunningPool {
             return running.profit(date);
         }
         return 0;
+    }
+
+    /**
+     * 是否running最后一天
+     * @return
+     */
+    public boolean isEndDay(LocalDate date){
+        if (running == null){
+            log.info("running is null, has not end day .");
+            return false;
+        }
+        return running.isEndDay(date);
     }
 
 }

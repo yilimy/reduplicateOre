@@ -28,9 +28,10 @@ public class Project {
     public static void main(String[] args) {
         Project project = new Project();
         project.init();
+        // 03-10续期10w，03-11生效，04-24截止：[02-09,04-25)
         project.business.start(
                 LocalDate.parse("2020-02-09"),
-                LocalDate.parse("2020-03-11")
+                LocalDate.parse("2020-05-25")
         );
     }
 
@@ -62,7 +63,8 @@ public class Project {
 
         strategies.add(StrategyFactory.createStrategy("2020-02-26", 26667));
 
-        strategies.add(StrategyFactory.createStrategy("2020-03-10", PoolType.SUPER_V2));
+
+        strategies.add(StrategyFactory.createStrategy("2020-04-02", 53334));
 
         business.setStrategies(strategies);
     }
