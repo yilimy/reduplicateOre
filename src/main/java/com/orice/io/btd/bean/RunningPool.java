@@ -52,6 +52,7 @@ public class RunningPool {
         }
         // 购买一个续期矿池
         if (next == null){
+            pool.setStart(date.plusDays(1));
             next = pool;
             log.info("buy renewal pool success {}", pool);
             return btd - pool.getCost();
@@ -84,15 +85,15 @@ public class RunningPool {
     }
 
     /**
-     * 是否running最后一天
+     * 是否可以续期
      * @return
      */
-    public boolean isEndDay(LocalDate date){
+    public boolean canRenewal(LocalDate date){
         if (running == null){
-            log.info("running is null, has not end day .");
+            log.info("running is null, has not end day .", running.getType());
             return false;
         }
-        return running.isEndDay(date);
+        return running.canRenewal(date);
     }
 
 }

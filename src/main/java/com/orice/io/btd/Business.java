@@ -58,10 +58,10 @@ public class Business {
                 item.deal(this);
             }
         });
-        // 触发自动购买策略，10w, 4w
+        // 触发自动购买策略，10w, 4w ...
         pools.stream().forEach(item -> autoRenewal(item, date));
         // 当日结算持有
-        System.out.printf("%s total btd %s\n", date, btd);
+        log.info("{} total btd {}\n", date, btd);
     }
 
     /**
@@ -73,6 +73,20 @@ public class Business {
             throw new RuntimeException("enCash failed .");
         }
         btd = btd -d;
+    }
+
+    /**
+     * 暂停所有复投
+     */
+    public void suspend(){
+        pools.stream().forEach(item -> item.setAuto(false));
+    }
+
+    /**
+     * 重新开始全部自动复投
+     */
+    public void reAuto(){
+        pools.stream().forEach(item -> item.setAuto(true));
     }
 
     /**
@@ -92,7 +106,7 @@ public class Business {
      * 自动续期
      */
     private void autoRenewal(RunningPool pool, LocalDate date){
-        if (!pool.isEndDay(date)){
+        if (!pool.canRenewal(date)){
             return;
         }
         if (!pool.isAuto() || pool.getNext() != null){
@@ -106,6 +120,7 @@ public class Business {
         String typeStr = type.name();
         typeStr = typeStr.substring(0, typeStr.length()-1) + "2";
         PoolType typeNew = PoolType.matches(typeStr);
+        log.info("ready to  renewal pool : {}", typeStr);
         btd = pool.buyPool(typeNew, date, btd);
         log.info("auto renewal pool .");
     }

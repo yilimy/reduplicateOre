@@ -32,7 +32,10 @@ public enum PoolType {
     // 精英矿池
     ELITE_V2(40000, 52000, 45),
     // 超级矿池
-    SUPER_V2(100000, 135000, 45)
+    SUPER_V2(100000, 135000, 45),
+
+    // 体验矿池
+    EXPERIENCE2(50, 54, 30)
     ;
     double cost;
     double output;

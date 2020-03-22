@@ -30,6 +30,16 @@ public class StrategyFactory {
         return createStrategy(enCashDate, null, btd);
     }
 
+    /**
+     * 开启和关闭自动复投
+     * @param dateStr
+     * @param suspended 是否关闭
+     * @return
+     */
+    public static SuspendStrategy createStrategy(String dateStr, boolean suspended){
+        return SuspendStrategy.builder().suspended(suspended).date(LocalDate.parse(dateStr)).build();
+    }
+
     private static InvestStrategy createStrategy(String dateStr, PoolType type, double btd){
         if (type != null){
             return PoolStrategy.builder().type(type).date(LocalDate.parse(dateStr)).build();

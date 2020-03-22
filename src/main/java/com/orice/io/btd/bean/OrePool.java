@@ -60,12 +60,13 @@ public class OrePool {
     }
 
     /**
-     * 是否最后一天
+     * 是否可以续期
      * @param date
      * @return
      */
-    public boolean isEndDay(LocalDate date){
-        return end.isEqual(date);
+    public boolean canRenewal(LocalDate date){
+        // 最后一天，及其之后
+        return !end.isAfter(date);
     }
 
     /**
@@ -73,7 +74,11 @@ public class OrePool {
      * @return
      */
     public boolean isAvailable(LocalDate date){
-        return !date.isBefore(start) && !date.isAfter(end);
+        boolean flag = !date.isBefore(start) && !date.isAfter(end);
+        if (!flag){
+            log.info("已过期 : {}", this);
+        }
+        return flag;
     }
 
     /**
